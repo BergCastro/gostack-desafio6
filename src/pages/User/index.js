@@ -14,6 +14,7 @@ import {
   Info,
   Title,
   Author,
+  LoadingSpinner,
 } from './styles';
 
 export default class User extends Component {
@@ -24,7 +25,8 @@ export default class User extends Component {
   state = {
     stars: [],
     page: 1,
-    loading: false,
+    loading: true,
+    refreshing: false,
   };
 
   async componentDidMount() {
@@ -46,6 +48,7 @@ export default class User extends Component {
       stars: [...stars, ...response.data],
       page: page + 1,
       loading: false,
+      refreshing: false,
     });
   };
 
@@ -53,7 +56,7 @@ export default class User extends Component {
     this.setState({
       stars: [],
       page: 1,
-      loading: true,
+      refreshing: true,
     });
     this.loadStars();
   };
@@ -65,7 +68,7 @@ export default class User extends Component {
   };
 
   render() {
-    const { stars, loading } = this.state;
+    const { stars, loading, refreshing } = this.state;
     const { navigation } = this.props;
     const user = navigation.getParam('user');
     return (
@@ -75,11 +78,16 @@ export default class User extends Component {
           <Name>{user.name}</Name>
           <Bio>{user.bio}</Bio>
         </Header>
+        {loading ? (
+              <LoadingSpinner  />
+            ) : (
+
+
         <Stars
           onEndReachedThreshold={0.2}
           onEndReached={this.loadStars}
           onRefresh={this.refreshList}
-          refreshing={loading}
+          refreshing={refreshing}
           data={stars}
           keyExtractor={star => String(star.id)}
           renderItem={({ item }) => (
@@ -92,6 +100,7 @@ export default class User extends Component {
             </Starred>
           )}
         />
+        )}
       </Container>
     );
   }
