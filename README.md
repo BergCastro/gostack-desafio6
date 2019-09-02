@@ -19,9 +19,10 @@ yarn
 
 ## Running
 
-`react-native start`
-`react-native run-android`
-]
+```
+react-native start
+react-native run-android
+```
 
 ## Author
 
